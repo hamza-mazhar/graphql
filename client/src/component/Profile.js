@@ -5,7 +5,12 @@ import { useNavigate } from "react-router-dom";
 export default function Profile() {
   const navigate = useNavigate();
   const { loading, error, data } = useQuery(GET_MY_PROFILE, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "no-cache",
+    context: {
+      headers: {
+        authorization: localStorage.getItem("token"), // this header will reach the server
+      },
+    },
   });
   if (!localStorage.getItem("token")) {
     navigate("/login");
