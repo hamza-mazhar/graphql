@@ -2,6 +2,7 @@ import { ApolloServer } from "apollo-server-express";
 import {
   ApolloServerPluginLandingPageGraphQLPlayground,
   ApolloServerPluginDrainHttpServer,
+  ApolloServerPluginLandingPageDisabled,
 } from "apollo-server-core";
 import typeDefs from "./query.js";
 import mongoose from "mongoose";
