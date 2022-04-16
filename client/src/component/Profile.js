@@ -1,7 +1,9 @@
 import React from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { GET_MY_PROFILE } from "../gqlQuery/gqlQuery";
 import { useNavigate } from "react-router-dom";
+import { DELETE_QUOTE } from "../gqlQuery/mutation";
+import ModalQuote from "./UpdateQuote";
 export default function Profile() {
   const navigate = useNavigate();
   const { loading, error, data } = useQuery(GET_MY_PROFILE, {
@@ -12,6 +14,16 @@ export default function Profile() {
       },
     },
   });
+  const [deleteQuote] = useMutation(DELETE_QUOTE, {
+    refetchQueries: ["getMyProfile"],
+    fetchPolicy: "no-cache",
+    context: {
+      headers: {
+        authorization: localStorage.getItem("token"), // this header will reach the server
+      },
+    },
+  });
+
   if (!localStorage.getItem("token")) {
     navigate("/login");
     return <h1>unauthorized</h1>;
@@ -20,6 +32,15 @@ export default function Profile() {
   if (error) {
     console.log(error);
   }
+
+  const handleDelete = (id) => {
+    deleteQuote({
+      variables: {
+        id: id,
+      },
+    });
+  };
+
   return (
     <>
       {!!data ? (
@@ -39,9 +60,7 @@ export default function Profile() {
           <h3>Your quotes</h3>
           {data.user.quotes.map((quo, idx) => {
             return (
-              <blockquote key={idx}>
-                <h6>{quo.name}</h6>
-              </blockquote>
+              <ModalQuote data={quo} key={idx} handleDelete={handleDelete} />
             );
           })}
         </div>

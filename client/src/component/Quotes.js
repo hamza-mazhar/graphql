@@ -6,6 +6,12 @@ export default function CreateQuote() {
   const [quote, setQuote] = useState("");
   const [createQuote, { data, loading, error }] = useMutation(CREATE_QUOTE, {
     refetchQueries: ["getAllQuotes", "getMyProfile"],
+    fetchPolicy: "no-cache",
+    context: {
+      headers: {
+        authorization: localStorage.getItem("token"), // this header will reach the server
+      },
+    },
   });
 
   const handleSubmit = (e) => {

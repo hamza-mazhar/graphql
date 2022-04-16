@@ -1,14 +1,17 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useApolloClient } from "@apollo/client";
 
 export default function NavBar() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const client = useApolloClient();
 
   const handleLogOut = () => {
     localStorage.removeItem("token");
     localStorage.clear();
     navigate("/login");
+    client.clearStore();
   };
 
   return (

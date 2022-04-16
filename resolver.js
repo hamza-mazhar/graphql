@@ -61,6 +61,22 @@ const resolvers = {
       newQuote.save();
       return "Quote is created Successfully";
     },
+    deleteQuote: async (_, { id }, { userId }) => {
+      if (!userId) {
+        throw new Error("user is not loggedin");
+      }
+      const deleteQuote = await Quote.findByIdAndDelete({ _id: id });
+      return deleteQuote;
+    },
+    updateQuote: async (_, { quoteupdate }, { userId }) => {
+      const quote = await Quote.findByIdAndUpdate(
+        quoteupdate.id,
+        { $set: { name: quoteupdate.name } },
+        { new: true }
+      );
+      console.log(quote);
+      return quote;
+    },
   },
 };
 

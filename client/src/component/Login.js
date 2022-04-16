@@ -5,9 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [formData, setFormData] = useState({});
-  const [signInUser, { loading, data, error }] = useMutation(LOGIN_USER);
+  const [signInUser] = useMutation(LOGIN_USER);
   const navigate = useNavigate();
-  if (loading) return <h3>Loading...</h3>;
 
   const handleChange = (e) => {
     setFormData({
@@ -16,23 +15,26 @@ export default function Login() {
     });
   };
 
-  if (data) {
-    localStorage.setItem("token", data.user.token);
-    navigate("/");
-  }
-
   const handleSubmit = (e) => {
     e.preventDefault();
     signInUser({
       variables: {
         userSignIn: formData,
       },
-    });
+    })
+      .then(({ data }) => {
+        if (data) {
+          localStorage.setItem("token", data.user.token);
+          navigate("/");
+        }
+      })
+      .catch((e) => {
+        console.log("________________", e);
+        return <div className="red card-panel">{e.message}</div>;
+      });
   };
   return (
     <div className="container my-container">
-      {error && <div className="red card-panel">{error.message}</div>}
-
       <h5>Login!!</h5>
       <form onSubmit={handleSubmit}>
         <input

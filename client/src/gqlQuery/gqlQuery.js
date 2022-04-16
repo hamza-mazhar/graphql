@@ -20,6 +20,7 @@ export const GET_MY_PROFILE = gql`
       email
       quotes {
         name
+        _id
       }
     }
   }
