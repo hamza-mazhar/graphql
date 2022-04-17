@@ -38,7 +38,10 @@ const resolvers = {
       if (!user) {
         throw new Error("user does not exisit");
       }
-      const comparePass = bcrypt.compare(user.password, userSignIn.password);
+      const comparePass = await bcrypt.compare(
+        userSignIn.password,
+        user.password
+      );
       if (!comparePass) {
         throw new Error("invalid username or password");
       }
